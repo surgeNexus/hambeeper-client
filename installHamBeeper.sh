@@ -1,12 +1,12 @@
 #!/bin/bash
-
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 # installNode By Steven de Salas
-
 # Based on script by Richard Stanley @ https://github.com/audstanley/Node-MongoDb-Pi/
 # This is for a RaspberryPi Zero but should work across all models.
-
 VERSION=v16.3.0;
-
 # Creates directory for downloads, and downloads node
 cd ~/ && mkdir temp && cd temp;
 wget https://unofficial-builds.nodejs.org/download/release/$VERSION/node-$VERSION-linux-armv6l.tar.gz;
@@ -43,43 +43,34 @@ sudo ln -s /opt/nodejs/bin/npx /usr/bin/npx;
 sudo ln -s /opt/nodejs/bin/npx /usr/sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /usr/local/bin/npx;
-
 ### Script below written by Jordan Webb https://github.com/surgeNexus/ ###
-
 sudo apt install python3-pip git
 sudo pip3 install flask
 sudo pip3 install dotenv
 sudo pip3 install socketio 
 sudo pip3 install requests
 sudo pip3 install requests
-
 sudo mkdir /etc/hambeeper
 sudo cd /etc/hambeeper
 sudo git clone https://github.com/surgeNexus/hambeeper-client.git
-
 sudo touch .env
-
 sudo read -p 'Please enter your Node ID: ' cliRic
 sudo read -p "Is the Node ID $cliRic correct? (yes/no) " yn
 case $yn in 
 	yes ) echo ok, we will proceed;;
 	no ) read -p 'Please enter your Node ID: ' cliRic
 esac
-
 sudo read -p 'Please enter your Node Password: ' password
 sudo read -p "Is the Node Password $password correct? (yes/no) " yn
 case $yn in 
 	yes ) echo ok, we will proceed;;
 	no ) read -p 'Please enter your Node Password: ' password
 esac
-
 sudo echo "PORT=3001" > .env
 sudo echo "SOCKET_URL=https://hambeeper.decad3.com" > .env
 sudo echo "CLI_RIC=$cliRic" > .env
 sudo echo "CLI_PASS=$password" > .env
-
 sudo touch /etc/systemd/system/hambeeper.service
-
 sudo echo "[Unit]" > hambeeper.service
 sudo echo "Description=Ham Beeper Service" > hambeeper.service
 sudo echo "After=multi-user.target" > hambeeper.service
@@ -89,7 +80,6 @@ sudo echo "Restart=always" > hambeeper.service
 sudo echo "ExecStart=/usr/bin/python3 /etc/hambeeper/hamBeeper.py" > hambeeper.service
 sudo echo "[Install]" > hambeeper.service
 sudo echo "WantedBy=multi-user.target" > hambeeper.service
-
 sudo systemctl daemon-reload
 sudo systemctl enable hambeeper.service
 sudo systemctl start hambeeper.service
