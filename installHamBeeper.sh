@@ -44,32 +44,30 @@ sudo ln -s /opt/nodejs/bin/npx /usr/sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /usr/local/bin/npx;
 ### Script below written by Jordan Webb https://github.com/surgeNexus/ ###
-sudo apt install -y python3-pip git
+# Install Python dependencies
+sudo apt update -y
+sudo apt install -y python3 python3-pip git
 sudo pip3 install flask
-sudo pip3 install dotenv
-sudo pip3 install socketio 
-sudo pip3 install requests
-sudo pip3 install requests
+sudo pip3 install python-dotenv
+sudo pip3 install python-socketio
+sudo pip3 install python-requests
+# Create the hambeeper directory
 sudo mkdir /etc/hambeeper
-sudo cd /etc/hambeeper
+cd /etc/hambeeper
+# Clone the hambeeper-client repository
 sudo git clone https://github.com/surgeNexus/hambeeper-client.git
+# Create the .env file
 sudo touch .env
-sudo read -p 'Please enter your Node ID: ' cliRic
-sudo read -p "Is the Node ID $cliRic correct? (yes/no) " yn
-case $yn in 
-	yes ) echo ok, we will proceed;;
-	no ) read -p 'Please enter your Node ID: ' cliRic
-esac
-sudo read -p 'Please enter your Node Password: ' password
-sudo read -p "Is the Node Password $password correct? (yes/no) " yn
-case $yn in 
-	yes ) echo ok, we will proceed;;
-	no ) read -p 'Please enter your Node Password: ' password
-esac
-sudo echo "PORT=3001" > .env
-sudo echo "SOCKET_URL=https://hambeeper.decad3.com" > .env
-sudo echo "CLI_RIC=$cliRic" > .env
-sudo echo "CLI_PASS=$password" > .env
+# Prompt the user for their Node ID and password
+cliRic=$(read -p 'Please enter your Node ID: ' </dev/tty)
+password=$(read -p 'Please enter your Node Password: ' </dev/tty)
+
+Write the .env file
+echo "PORT=3001" >> .env
+echo "SOCKET_URL=https://hambeeper.decad3.com" >> .env
+echo "CLI_RIC=$cliRic" >> .env
+echo "CLI_PASS=$password" >> .env
+
 sudo touch /etc/systemd/system/hambeeper.service
 sudo echo "[Unit]" > hambeeper.service
 sudo echo "Description=Ham Beeper Service" > hambeeper.service
