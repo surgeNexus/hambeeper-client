@@ -44,7 +44,7 @@ sudo ln -s /opt/nodejs/bin/npx /usr/sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /sbin/npx;
 sudo ln -s /opt/nodejs/bin/npx /usr/local/bin/npx;
 ### Script below written by Jordan Webb https://github.com/surgeNexus/ ###
-sudo apt install python3-pip git
+sudo apt install -y python3-pip git
 sudo pip3 install flask
 sudo pip3 install dotenv
 sudo pip3 install socketio 
