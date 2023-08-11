@@ -56,17 +56,40 @@ sudo mkdir /etc/hambeeper
 cd /etc/hambeeper
 # Clone the hambeeper-client repository
 sudo git clone https://github.com/surgeNexus/hambeeper-client.git
-# Create the .env file
-sudo touch .env
-# Prompt the user for their Node ID and password
-cliRic=$(read -p 'Please enter your Node ID: ' </dev/tty)
-password=$(read -p 'Please enter your Node Password: ' </dev/tty)
+# Check if the .env file exists
+if [ ! -f ".env" ]; then
+  echo "Creating .env file..."
+  touch .env
+fi
 
-Write the .env file
+# Get the user input for the Node ID
+echo "Enter your Node ID:"
+read CLI_RIC
+
+# Get the user input for the Node Password
+echo "Enter your Node Password:"
+read CLI_PASS
+
+# Confirm the user input
+echo "Are you sure you want to write the following environment variables to the file?"
+echo "CLI_RIC=$CLI_RIC"
+echo "CLI_PASS=$CLI_PASS"
+read -p "(Y/N) " confirm
+
+if [[ $confirm =~ ^[Yy]$ ]]; then
+  # Write the environment variables to the file
+  echo "CLI_RIC=$CLI_RIC" >> .env
+  echo "CLI_PASS=$CLI_PASS" >> .env
+
+  echo "Environment variables written to file."
+else
+  echo "Environment variables not written to file."
+  echo "Please try again."
+fi
+
+#Write the .env file
 echo "PORT=3001" >> .env
 echo "SOCKET_URL=https://hambeeper.decad3.com" >> .env
-echo "CLI_RIC=$cliRic" >> .env
-echo "CLI_PASS=$password" >> .env
 
 sudo touch /etc/systemd/system/hambeeper.service
 sudo echo "[Unit]" > hambeeper.service
